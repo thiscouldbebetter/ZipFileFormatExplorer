@@ -1,0 +1,62 @@
+<html>
+<body>
+ 
+<div id="divUI">
+
+	<h3>ZIP File Format Explorer</h3>
+
+	<p>
+		Upload a valid .zip file to see parsed information about its contents.
+	</p>
+
+	<label>ZIP File to Load:</label><br />
+	<input type="file" onchange="inputFile_Changed(this);"></input><br />
+	<label>File Contents as JSON:</label><br />
+	<textarea id="textareaFileAsJSON" cols="80" rows="20"></textarea>
+</div>
+
+<script type="text/javascript" src="ByteHelper.js"></script>
+<script type="text/javascript" src="ByteStream.js"></script>
+<script type="text/javascript" src="ZipFile.js"></script>
+<script type="text/javascript" src="ZipFileCentralDirectoryEntry.js"></script>
+<script type="text/javascript" src="ZipFileCentralDirectoryEndRecord.js"></script>
+<script type="text/javascript" src="ZipFileLocalFileEntry.js"></script>
+<script type="text/javascript" src="ZipFileLocalFileHeader.js"></script>
+
+<script type="text/javascript">
+ 
+// ui event handlers
+ 
+function inputFile_Changed(inputFile)
+{
+	var file = inputFile.files[0];
+	if (file != null)
+	{
+		var fileReader = new FileReader();
+		fileReader.onload = (event) =>
+		{
+			var fileAsBinaryString = event.target.result;
+			var fileAsBytes = ByteHelper.binaryStringToBytes(fileAsBinaryString);
+			var fileAsZipFile = ZipFile.fromBytes(fileAsBytes);
+			var fileAsJSON = fileAsZipFile.toStringJSON();
+			var textareaFileAsJSON = document.getElementById("textareaFileAsJSON");
+			textareaFileAsJSON.value = fileAsJSON;
+		}
+		fileReader.readAsBinaryString(file);
+	}
+}
+ 
+// classes
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+</script>
+
+</body>
+</html>
